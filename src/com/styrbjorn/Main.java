@@ -1,5 +1,6 @@
 package com.styrbjorn;
 
+import com.com.graphics.VertexArrayObject;
 import com.math.Matrix4f;
 import com.utility.BufferUtility;
 import org.lwjgl.*;
@@ -106,35 +107,29 @@ public class Main {
         shader.enable();
         shader.setUniformMat4f("projection_matrix", Matrix4f.orthographic(0, WIDTH, HEIGHT, 0, -1, 1));
 
+        float vertex2[] = new float[]{
+            0, 0, 0,        1, 0, 0,
+            0, 300, 0,      0, 0, 1,
+            300, 300, 0,    0, 1, 0
+        };
         float vertex[] = new float[]{
-            0, 0, 0,
-            0, 300, 0,
-            300, 300, 0
+                100, 100, 0,        1, 0, 0,
+                100, 400, 0,        0, 0, 1,
+                400, 400, 0,        0, 1, 0
         };
 
-        // Test
-        int vbo;
-        vbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, BufferUtility.createFloatBuffer(vertex), GL_STATIC_DRAW);
-        glVertexAttribPointer(Shader.VERTEX_LOCATION, 3, GL_FLOAT, false, 0, 0);
-        glEnableVertexAttribArray(Shader.VERTEX_LOCATION);
+        // Test w/VertexArrayObject
+        VertexArrayObject vao = new VertexArrayObject(vertex);
+        //vao.updateBufferData(vertex2);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-
             shader.enable();
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-
-            //glBegin(GL_TRIANGLES);
-            //glVertex2d(-0.25, -0.25);
-            //glVertex2d(0, 0.25);
-            //glVertex2d(0.25, -0.25);
-            //glEnd();
+            vao.render();
+            shader.disable();
 
             glfwSwapBuffers(window); // swap the color buffers
             // Poll for window events. The key callback above will only be

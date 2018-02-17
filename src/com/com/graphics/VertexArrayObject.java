@@ -9,11 +9,11 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class VertexArrayObject {
 
-    private int vao, vbo;
+    private int vao, vbo, ibo;
     private int count;
 
-    public VertexArrayObject(float[] vertices){
-        count = 3;
+    public VertexArrayObject(float[] vertices, byte[] indices){
+        count = 6;
 
         // 4 bytes in a float
         int floatByteSize = 4;
@@ -30,6 +30,11 @@ public class VertexArrayObject {
         glEnableVertexAttribArray(Shader.VERTEX_LOCATION);
         glEnableVertexAttribArray(Shader.COLOR_LOCATION);
 
+        ibo = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, BufferUtility.createByteBuffer(indices), GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
@@ -42,16 +47,16 @@ public class VertexArrayObject {
 
     public void bind(){
         glBindVertexArray(vao);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     }
 
     public void unbind(){
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
 
     public void drawCall(){
-        glDrawArrays(GL_TRIANGLES, 0, this.count);
+        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_BYTE, 0);
     }
 
     public void render(){

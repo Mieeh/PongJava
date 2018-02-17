@@ -1,7 +1,9 @@
 package com.styrbjorn;
 
+import com.com.graphics.Rectangle;
 import com.com.graphics.VertexArrayObject;
 import com.math.Matrix4f;
+import com.math.Vector3;
 import com.utility.BufferUtility;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -107,28 +109,19 @@ public class Main {
         shader.enable();
         shader.setUniformMat4f("projection_matrix", Matrix4f.orthographic(0, WIDTH, HEIGHT, 0, -1, 1));
 
-        float vertex2[] = new float[]{
-            0, 0, 0,        1, 0, 0,
-            0, 300, 0,      0, 0, 1,
-            300, 300, 0,    0, 1, 0
-        };
-        float vertex[] = new float[]{
-                100, 100, 0,        1, 0, 0,
-                100, 400, 0,        0, 0, 1,
-                400, 400, 0,        0, 1, 0
-        };
-
-        // Test w/VertexArrayObject
-        VertexArrayObject vao = new VertexArrayObject(vertex);
-        //vao.updateBufferData(vertex2);
+        Rectangle rect = new Rectangle(200, 200, new Vector3(1, 0, 0));
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+            // Render start
             shader.enable();
-            vao.render();
+
+            rect.render();
+
+            // Render stop
             shader.disable();
 
             glfwSwapBuffers(window); // swap the color buffers

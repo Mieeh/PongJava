@@ -1,10 +1,10 @@
 package com.styrbjorn;
 
 import com.com.graphics.Rectangle;
-import com.com.graphics.VertexArrayObject;
 import com.math.Matrix4f;
 import com.math.Vector3;
-import com.utility.BufferUtility;
+import com.input.Input;
+
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -112,13 +112,16 @@ public class Main {
         Rectangle rect = new Rectangle(200, 200, new Vector3(1, 0, 0));
 
         // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
+        // the window or has prkessed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             // Render start
             shader.enable();
 
+            if(Input.isKeyDown(GLFW.GLFW_KEY_A)){
+                rect.setPosition(new Vector3(rect.getPosition().x + 0.5f, 0, 0));
+            }
             rect.render();
 
             // Render stop

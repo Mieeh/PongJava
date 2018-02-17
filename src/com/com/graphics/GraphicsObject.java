@@ -13,6 +13,7 @@ public abstract class GraphicsObject {
     public abstract void render();
 
     GraphicsObject(float _width , float _height, Vector3 _color){
+        position = new Vector3(0,0,0);
         setWidth(_width);
         setHeight(_height);
         setColor(_color);

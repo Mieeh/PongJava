@@ -30,8 +30,8 @@ public class Main {
     // The window handle
     private long window;
 
-    static int WIDTH = 750;
-    static int HEIGHT = 600;
+    private int WIDTH = 750;
+    private int HEIGHT = 600;
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -45,7 +45,6 @@ public class Main {
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
     }
 
     private void init() {
@@ -87,15 +86,12 @@ public class Main {
         // Enable v-sync
         glfwSwapInterval(1);
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-        });
         // Window resize callback
         glfwSetWindowSizeCallback(window, (window, width, height) -> {
             glViewport(0,0,width,height);
         });
+
+        glfwSetKeyCallback(window, new Input());
 
         // Make the window visible
         glfwShowWindow(window);
@@ -109,20 +105,25 @@ public class Main {
         shader.enable();
         shader.setUniformMat4f("projection_matrix", Matrix4f.orthographic(0, WIDTH, HEIGHT, 0, -1, 1));
 
-        Rectangle rect = new Rectangle(200, 200, new Vector3(1, 0, 0));
+        Rectangle left = new Rectangle(10, 80, new Vector3(1, 0, 0));
 
         // Run the rendering loop until the user has attempted to close
         // the window or has prkessed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+            // Take input
+            if(Input.isKeyDown(GLFW.GLFW_KEY_S)){
+                left.setPosition(new Vector3(0, left.getPosition().y + 5f, 0));
+            }
+            if(Input.isKeyDown(GLFW.GLFW_KEY_W)){
+                left.setPosition(new Vector3(0, left.getPosition().y - 5f, 0));
+            }
+
             // Render start
             shader.enable();
 
-            if(Input.isKeyDown(GLFW.GLFW_KEY_A)){
-                rect.setPosition(new Vector3(rect.getPosition().x + 0.5f, 0, 0));
-            }
-            rect.render();
+            left.render();
 
             // Render stop
             shader.disable();

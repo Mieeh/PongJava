@@ -1,6 +1,7 @@
 package com.styrbjorn;
 
-import com.com.graphics.Rectangle;
+import com.entities.Ball;
+import com.entities.Paddle;
 import com.math.Matrix4f;
 import com.math.Vector3;
 import com.input.Input;
@@ -30,8 +31,10 @@ public class Main {
     // The window handle
     private long window;
 
-    private int WIDTH = 750;
-    private int HEIGHT = 600;
+    public static final int WIDTH = 750;
+    public static final int HEIGHT = 600;
+
+    float DEG2RAD = 3.14159f/180;
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -101,37 +104,42 @@ public class Main {
         // Set the clear color
         glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 
+        // Create shader
         Shader shader = new Shader("D:\\LearningJavaFun\\ljgwl_2\\shaders\\vertex.txt", "D:\\LearningJavaFun\\ljgwl_2\\shaders\\fragment.txt");
         shader.enable();
         shader.setUniformMat4f("projection_matrix", Matrix4f.orthographic(0, WIDTH, HEIGHT, 0, -1, 1));
 
-        Rectangle left = new Rectangle(10, 80, new Vector3(1, 0, 0));
+        float y = (HEIGHT/2)-(Paddle.HEIGHT/2);
+        Paddle leftPaddle = new Paddle(new Vector3(20,y,0), GLFW.GLFW_KEY_W, GLFW.GLFW_KEY_S);
+        Paddle rightPaddle = new Paddle(new Vector3(WIDTH - Paddle.WIDTH - 20, y, 0), GLFW.GLFW_KEY_UP, GLFW.GLFW_KEY_DOWN);
+
+        Ball ball = new Ball(leftPaddle, rightPaddle);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has prkessed the ESCAPE key.
         while ( !glfwWindowShouldClose(window) ) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+            // clear the framebuffer
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // Take input
-            if(Input.isKeyDown(GLFW.GLFW_KEY_S)){
-                left.setPosition(new Vector3(0, left.getPosition().y + 5f, 0));
-            }
-            if(Input.isKeyDown(GLFW.GLFW_KEY_W)){
-                left.setPosition(new Vector3(0, left.getPosition().y - 5f, 0));
-            }
+            // This makes sure Input.invoke() gets called
+            glfwPollEvents();
+
+            // Update entities
+            leftPaddle.update();
+            rightPaddle.update();
+            ball.update();
 
             // Render start
             shader.enable();
 
-            left.render();
+            leftPaddle.render();
+            rightPaddle.render();
+            ball.render();
 
             // Render stop
             shader.disable();
 
             glfwSwapBuffers(window); // swap the color buffers
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();
         }
     }
 

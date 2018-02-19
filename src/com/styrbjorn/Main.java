@@ -23,7 +23,6 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-// com.com what?
 import com.com.graphics.Shader;
 
 public class Main {

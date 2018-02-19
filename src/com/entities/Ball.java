@@ -1,6 +1,7 @@
 package com.entities;
 
 import com.com.graphics.Rectangle;
+import com.math.Collision;
 import com.math.Vector3;
 import com.styrbjorn.Main;
 
@@ -28,7 +29,7 @@ public class Ball {
     private void setVelocity(){
         int num = random.nextInt(100);
         if(num > 50){
-            velocityX = 7;
+            velocityX = random.nextInt(5)+1;
             if(num > 75){
                 velocityY = 3;
             }
@@ -37,7 +38,7 @@ public class Ball {
             }
         }
         else{
-            velocityX = -7;
+            velocityX = -(random.nextInt(5)+1);
             if(num < 25){
                 velocityY = 3;
             }
@@ -53,9 +54,21 @@ public class Ball {
         shape.setPosition(newPos);
 
         // Collision check
-        float ballx1 = shape.getPosition().x;
-        float ballx2 = shape.getPosition().x + shape.getWidth();
-        float rectx1 =
+        // Window height bounds
+        if(shape.getPosition().y < 0){
+            velocityY *= -1;
+        }
+        if(shape.getPosition().y > Main.HEIGHT-SIZE){
+            velocityY *= -1;
+        }
+        // Left paddle & ball
+        if(Collision.intersects(shape, paddleLeft.getShape())){
+            velocityX *= -1;
+        }
+        // Right paddle & ball
+        if(Collision.intersects(shape, paddleRight.getShape())){
+            velocityX *= -1;
+        }
     }
 
     public void render(){

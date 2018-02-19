@@ -28,6 +28,10 @@ public class Paddle {
         return shape.getPosition().y;
     }
 
+    public Rectangle getShape(){
+        return shape;
+    }
+
     public void update(){
         // Input
         if(Input.isKeyDown(upKeyCode)){

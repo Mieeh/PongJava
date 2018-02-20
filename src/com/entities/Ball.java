@@ -9,12 +9,12 @@ import java.util.Random;
 
 public class Ball {
 
-    Rectangle shape;
+    private Rectangle shape;
     public static final int SIZE = 20;
-    Random random = new Random();
-    float velocityX, velocityY;
+    private Random random = new Random();
+    private float velocityX, velocityY;
 
-    Paddle paddleLeft, paddleRight;
+    private Paddle paddleLeft, paddleRight;
 
     public Ball(Paddle _paddleLeft, Paddle _paddleRight){
         shape = new Rectangle(SIZE, SIZE, new Vector3(1, 0, 0));
@@ -29,7 +29,7 @@ public class Ball {
     private void setVelocity(){
         int num = random.nextInt(100);
         if(num > 50){
-            velocityX = random.nextInt(5)+1;
+            velocityX = 4;
             if(num > 75){
                 velocityY = 3;
             }
@@ -38,7 +38,7 @@ public class Ball {
             }
         }
         else{
-            velocityX = -(random.nextInt(5)+1);
+            velocityX = -4;
             if(num < 25){
                 velocityY = 3;
             }
@@ -55,20 +55,31 @@ public class Ball {
 
         // Collision check
         // Window height bounds
-        if(shape.getPosition().y < 0){
+        if(shape.getPosition().y < 0 || shape.getPosition().y > Main.HEIGHT-SIZE){
             velocityY *= -1;
         }
-        if(shape.getPosition().y > Main.HEIGHT-SIZE){
-            velocityY *= -1;
-        }
+
         // Left paddle & ball
-        if(Collision.intersects(shape, paddleLeft.getShape())){
-            velocityX *= -1;
-        }
         // Right paddle & ball
-        if(Collision.intersects(shape, paddleRight.getShape())){
+        if(Collision.intersects(shape, paddleLeft.getShape())){
+            //velocityX *= 1.1f; // 10% speed increase/hit
+            System.out.println("what");
             velocityX *= -1;
         }
+        if(Collision.intersects(shape, paddleRight.getShape())){
+            //velocityX *= 1.1f; // 10% speed increase/hit
+            velocityX *= -1;
+        }
+    }
+
+    public void reset(){
+        shape.setPosition(new Vector3(Main.WIDTH/2 - (SIZE/2), Main.HEIGHT/2 - (SIZE/2), 0));
+        setVelocity();
+    }
+
+
+    public Rectangle getShape() {
+        return shape;
     }
 
     public void render(){

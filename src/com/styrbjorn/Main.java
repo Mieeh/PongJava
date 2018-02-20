@@ -44,7 +44,7 @@ public class Main {
 
     private void init() {
         window = new Window(WIDTH, HEIGHT);
-        window.setClearColor(new Vector3(0.25f, 0.1f, 0.1f));
+        window.setClearColor(new Vector3(0.2f, 0.1f, 0.15f));
     }
 
     private void loop() {

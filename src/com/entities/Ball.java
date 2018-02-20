@@ -31,19 +31,19 @@ public class Ball {
         if(num > 50){
             velocityX = 4;
             if(num > 75){
-                velocityY = 3;
+                velocityY = random.nextInt(7)+1;
             }
             else{
-                velocityY = -3;
+                velocityY = -(random.nextInt(7)+1);
             }
         }
         else{
             velocityX = -4;
             if(num < 25){
-                velocityY = 3;
+                velocityY = random.nextInt(7)+1;
             }
             else{
-                velocityY = -3;
+                velocityY = -(random.nextInt(7)+1);
             }
         }
     }
@@ -62,12 +62,11 @@ public class Ball {
         // Left paddle & ball
         // Right paddle & ball
         if(Collision.intersects(shape, paddleLeft.getShape())){
-            //velocityX *= 1.1f; // 10% speed increase/hit
-            System.out.println("what");
+            velocityX *= 1.25f; // 10% speed increase/hit
             velocityX *= -1;
         }
         if(Collision.intersects(shape, paddleRight.getShape())){
-            //velocityX *= 1.1f; // 10% speed increase/hit
+            velocityX *= 1.25f; // 10% speed increase/hit
             velocityX *= -1;
         }
     }
